@@ -13,20 +13,23 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
       - run: flutter config --enable-linux-desktop
+
       - name: Build Linux
         run: flutter build linux --release
-      - name: Build Web
-        run: flutter build web --release --base-href "/visualtimer/"
-      - name: Deploy Web
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build/web
-          branch: gh-pages
       - name: Artifact Linux
         uses: actions/upload-artifact@v4
         with:
           name: visualtimer_linux
           path: build/linux/x64/release/bundle/
+
+      - name: Build Web
+        run: flutter build web --release --base-href "/visualtimer/"
+      - name: Artifact Web
+        uses: actions/upload-artifact@v4
+        with:
+          name: visualtimer_web
+          path: build/web/
+
   release:
     runs-on: ubuntu-latest
     needs: build
@@ -41,7 +44,15 @@ jobs:
       - run: |
           cd artifacts/visualtimer_linux
           zip -r ../visualtimer_linux.zip ./
+
       - uses: softprops/action-gh-release@v1
         with:
           fail_on_unmatched_files: true
-          files: ./artifacts/visualtimer_linux.zip
+          files: |
+            ./artifacts/visualtimer_linux.zip
+
+      - name: Deploy Web
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: artifacts/visualtimer_web
+          branch: gh-pages
