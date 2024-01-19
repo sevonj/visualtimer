@@ -58,7 +58,7 @@ jobs:
           fail_on_unmatched_files: true
           files: |
             ./artifacts/visualtimer_linux.zip
-            ./artifacts/app-release.apk
+            ./artifacts/visualtimer_apk/app-release.apk
 
       - name: Deploy Web
         uses: JamesIves/github-pages-deploy-action@v4
