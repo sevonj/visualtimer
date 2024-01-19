@@ -16,7 +16,7 @@ jobs:
       - name: Build Linux
         run: flutter build linux --release
       - name: Build Web
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/visualtimer/"
       - name: Deploy Web
         uses: JamesIves/github-pages-deploy-action@v4
         with:
