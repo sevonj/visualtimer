@@ -31,7 +31,7 @@ jobs:
           path: artifacts
       - run: |
           cd artifacts/visualtimer_linux
-          zip -r visualtimer_linux.zip ./*
+          zip -r ../visualtimer_linux.zip ./
       - uses: softprops/action-gh-release@v1
         with:
           fail_on_unmatched_files: true
