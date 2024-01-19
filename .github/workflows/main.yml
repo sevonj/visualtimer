@@ -22,6 +22,14 @@ jobs:
           name: visualtimer_linux
           path: build/linux/x64/release/bundle/
 
+      - name: Build APK
+        run: flutter build apk --release
+      - name: Artifact Linux
+        uses: actions/upload-artifact@v4
+        with:
+          name: visualtimer_apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
       - name: Build Web
         run: flutter build web --release --base-href "/visualtimer/"
       - name: Artifact Web
@@ -41,15 +49,16 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - run: |
-          cd artifacts/visualtimer_linux
-          zip -r ../visualtimer_linux.zip ./
+      - name: Display artifacts
+        run: ls -R artifacts
+      - run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_linux.zip ./
 
       - uses: softprops/action-gh-release@v1
         with:
           fail_on_unmatched_files: true
           files: |
             ./artifacts/visualtimer_linux.zip
+            ./artifacts/app-release.apk
 
       - name: Deploy Web
         uses: JamesIves/github-pages-deploy-action@v4
