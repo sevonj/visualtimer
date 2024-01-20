@@ -74,7 +74,13 @@ class _TimerPageState extends State<TimerPage> {
     super.initState();
     _updateTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
+        // Time Out
         if (_timer.isRunning && _timeLeft() <= 0.0) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text(
+            "Done!",
+            textAlign: TextAlign.center,
+          )));
           _stop(0);
         }
       });
