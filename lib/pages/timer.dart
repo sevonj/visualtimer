@@ -7,29 +7,31 @@ import 'package:visualtimer/pages/settings.dart';
 import 'package:visualtimer/pages/timer/timer_ring.dart';
 import 'package:visualtimer/util/platform.dart';
 
+enum TimerMode { minutes, seconds }
+
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
-
   @override
   State<TimerPage> createState() => _TimerPageState();
 }
 
 class _TimerPageState extends State<TimerPage> {
-  int _minutes = 0;
+  TimerMode _mode = TimerMode.minutes;
+  int _counter = 0;
   Timer? _updateTimer;
   final Stopwatch _timer = Stopwatch();
 
   void _incrementTime() {
     setState(() {
-      _minutes += 5;
-      _minutes -= _minutes % 5;
+      _counter += 5;
+      _counter -= _counter % 5;
     });
   }
 
   void _decrementTime() {
     setState(() {
-      _minutes -= 1;
-      _minutes -= _minutes % 5;
+      _counter -= 1;
+      _counter -= _counter % 5;
     });
   }
 
@@ -53,20 +55,25 @@ class _TimerPageState extends State<TimerPage> {
 
       _timer.stop();
       _timer.reset();
-      _minutes = minutes;
+      _counter = minutes;
     });
   }
 
   void _togglePlay() {
     if (_timer.isRunning) {
-      _stop((_timeLeft() + .5).toInt());
+      _stop((_getTimeLeft() + .5).toInt());
     } else {
       _start();
     }
   }
 
-  double _timeLeft() {
-    return _minutes.toDouble() - _timer.elapsed.inMilliseconds / 60 / 1000;
+  double _getTimeLeft() {
+    switch (_mode) {
+      case TimerMode.minutes:
+        return _counter.toDouble() - _timer.elapsed.inMilliseconds / 60 / 1000;
+      case TimerMode.seconds:
+        return _counter.toDouble() - _timer.elapsed.inMilliseconds / 1000;
+    }
   }
 
   @override
@@ -75,7 +82,7 @@ class _TimerPageState extends State<TimerPage> {
     _updateTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
         // Time Out
-        if (_timer.isRunning && _timeLeft() <= 0.0) {
+        if (_timer.isRunning && _getTimeLeft() <= 0.0) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text(
             "Done!",
@@ -115,55 +122,79 @@ class _TimerPageState extends State<TimerPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const SizedBox(height: 16),
               Stack(
                 children: <Widget>[
                   AspectRatio(
-                    aspectRatio: .9,
+                    aspectRatio: 1,
                     child: CustomPaint(
                       foregroundPainter: TimerPainter(
                         minutes: _timer.isRunning
-                            ? _timeLeft()
-                            : _minutes.toDouble(),
+                            ? _getTimeLeft()
+                            : _counter.toDouble(),
                         colorScheme: Theme.of(context).colorScheme,
                       ),
                     ),
                   ),
                   AspectRatio(
-                    aspectRatio: .9,
+                    aspectRatio: 1,
                     child: Center(
                       child: IconButton(
                         icon: Icon(
                             _timer.isRunning ? Icons.stop : Icons.play_arrow,
                             size: width * .315),
-                        onPressed: _minutes <= 0 ? null : () => _togglePlay(),
+                        onPressed: _counter <= 0 ? null : () => _togglePlay(),
                       ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
               AnimatedSize(
                 curve: Curves.easeInOut,
                 duration: const Duration(milliseconds: 200),
                 child: Visibility(
                   visible: !_timer.isRunning,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed:
-                              _minutes <= 0 ? null : () => _decrementTime(),
-                        ),
-                        Text(
-                          '${_timer.isRunning ? _timeLeft().toInt() : _minutes}',
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed:
-                              _minutes >= 60 ? null : () => _incrementTime(),
-                        ),
-                      ]),
+                  child: Column(children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed:
+                                _counter <= 0 ? null : () => _decrementTime(),
+                          ),
+                          Text(
+                            '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed:
+                                _counter >= 60 ? null : () => _incrementTime(),
+                          ),
+                        ]),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: SegmentedButton<TimerMode>(
+                        segments: const [
+                          ButtonSegment<TimerMode>(
+                              value: TimerMode.seconds,
+                              label: Text('Seconds', textScaleFactor: 1.2)),
+                          ButtonSegment<TimerMode>(
+                              value: TimerMode.minutes,
+                              label: Text('Minutes', textScaleFactor: 1.2)),
+                        ],
+                        selected: {_mode},
+                        onSelectionChanged: (Set<TimerMode> newSelection) {
+                          setState(() {
+                            _mode = newSelection.first;
+                          });
+                        },
+                      ),
+                    ),
+                  ]),
                 ),
               ),
             ],
