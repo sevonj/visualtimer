@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:visualtimer/pages/settings.dart';
 import 'package:visualtimer/pages/timer/timer_ring.dart';
 
 class TimerPage extends StatefulWidget {
@@ -84,8 +85,24 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double width = min(screenWidth * .8, screenHeight * .7);
+    double width = min(screenWidth * .9, screenHeight * .7);
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: _timer.isRunning
+          ? null
+          : Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: FloatingActionButton(
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage())),
+                foregroundColor: colorScheme.onSurfaceVariant,
+                backgroundColor: colorScheme.surfaceVariant,
+                child: const Icon(Icons.menu),
+              ),
+            ),
       body: Center(
         child: SizedBox(
           width: width,
