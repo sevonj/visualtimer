@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:visualtimer/pages/settings.dart';
 import 'package:visualtimer/pages/timer/timer_ring.dart';
+import 'package:visualtimer/util/platform.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
@@ -35,8 +35,8 @@ class _TimerPageState extends State<TimerPage> {
 
   void _start() {
     setState(() {
-      // Mobile enable fullscreen
-      if (Platform.isAndroid) {
+      if (PlatformUtility.type == PlatformType.mobile) {
+        // Enable fullscreen
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
       }
       _timer.start();
@@ -45,8 +45,8 @@ class _TimerPageState extends State<TimerPage> {
 
   void _stop(int minutes) {
     setState(() {
-      // Mobile disable fullscreen
-      if (Platform.isAndroid) {
+      if (PlatformUtility.type == PlatformType.mobile) {
+        // Disable fullscreen
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       }
       _updateTimer = null;
