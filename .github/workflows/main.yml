@@ -34,7 +34,7 @@ jobs:
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
-          gpg -d --passphrase='${{ secrets.TEST_SECRET }}' --batch android/keystore.jks.asc > android/app/keystore.jks
+          gpg -d --passphrase='${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' --batch android/keystore.jks.asc > android/app/keystore.jks
           echo 'storePassword=${{ secrets.TEST_SECRET }}' > android/keystore.properties
           echo 'keyPassword=${{ secrets.TEST_SECRET }}' >> android/keystore.properties
           echo 'keyAlias=${{ secrets.TEST_SECRET }}' >> android/keystore.properties
