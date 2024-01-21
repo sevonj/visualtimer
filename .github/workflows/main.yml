@@ -31,7 +31,16 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - uses: subosito/flutter-action@v2
-      - run: flutter build apk
+      - name: Secrets
+        run: |
+          echo "${{ secrets.TEST_SECRET }}" > keystore.jks.asc
+          gpg -d --passphrase "${{ secrets.TEST_SECRET }}" --batch keystore.jks.asc > app/keystore.jks
+          echo "${{ secrets.TEST_SECRET }}" > keystore.properties.asc
+          gpg -d --passphrase "${{ secrets.TEST_SECRET }}" --batch keystore.properties.asc > keystore.properties
+      - name: display test secret
+        run: cat keystore.properties
+      - name: Build
+        run: flutter build apk
       - name: List files
         run: ls -R build/app/outputs/flutter-apk
       - name: Create artifact
