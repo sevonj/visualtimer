@@ -91,13 +91,17 @@ jobs:
           path: artifacts
       - name: Display artifacts
         run: ls -R artifacts
-      - run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_linux.zip ./
+      - name: Zip linux
+        run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_linux.zip ./
+      - name: Zip windows
+        run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_windows.zip ./
 
       - uses: softprops/action-gh-release@v1
         with:
           fail_on_unmatched_files: true
           files: |
             ./artifacts/visualtimer_linux.zip
+            ./artifacts/visualtimer_windows.zip
             ./artifacts/visualtimer_apk/app-release.apk
 
       - name: Deploy Web
