@@ -47,9 +47,13 @@ jobs:
         with:
           channel: 'beta'
       - run: flutter build windows --release
-      - name: show output files
-        run: tree build/windows
-
+      - name: List files
+        run: ls -R build/windows
+      - name: Create artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: visualtimer_windows
+          path: build\windows\x64\runner\Release
   release:
     runs-on: ubuntu-latest
     needs: build
