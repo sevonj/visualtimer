@@ -107,7 +107,8 @@ jobs:
       - name: Zip windows
         run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_windows.zip ./
 
-      - uses: softprops/action-gh-release@v1        with:
+      - uses: softprops/action-gh-release@v1
+        with:
           fail_on_unmatched_files: true
           files: |
             ./artifacts/visualtimer_linux.zip
