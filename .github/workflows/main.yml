@@ -1,6 +1,5 @@
 on:
-  push:
-    branch: master
+  push
 name: Build, Release
 jobs:
   build:
@@ -40,6 +39,18 @@ jobs:
           name: visualtimer_web
           path: build/web/
 
+  build-windows:
+    jobs:
+      build:
+        runs-on: windows-latest
+        steps:
+          - uses: actions/checkout@v3
+          - uses: subosito/flutter-action@v2
+            with:
+              channel: 'beta'
+          - run: flutter build windows
+          - name: show output files
+            run: ls -R build/windows
   release:
     runs-on: ubuntu-latest
     needs: build
