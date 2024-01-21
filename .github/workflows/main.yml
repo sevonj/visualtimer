@@ -38,7 +38,7 @@ jobs:
           echo "${{ secrets.TEST_SECRET }}" > android/keystore.properties.asc
           gpg -d --passphrase "${{ secrets.TEST_SECRET }}" --batch android/keystore.properties.asc > android/keystore.properties
       - name: display test secret
-        run: cat keystore.properties
+        run: cat android/keystore.properties
       - name: Build
         run: flutter build apk
       - name: List files
