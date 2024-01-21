@@ -46,9 +46,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
-      - run: flutter build windows
+      - run: flutter build windows --release
       - name: show output files
-        run: ls -R build/windows
+        run: tree build/windows
 
   release:
     runs-on: ubuntu-latest
