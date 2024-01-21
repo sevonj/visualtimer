@@ -34,11 +34,13 @@ jobs:
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
-          gpg -d --passphrase='${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' --batch android/keystore.jks.asc > android/app/keystore.jks
-          echo 'storePassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' > android/keystore.properties
-          echo 'keyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' >> android/keystore.properties
-          echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
+          gpg -d --passphrase='${{ secrets.TEST_SECRET }}' --batch android/keystore.jks.asc > android/app/keystore.jks
+          echo 'storePassword=${{ secrets.TEST_SECRET }}' > android/keystore.properties
+          echo 'keyPassword=${{ secrets.TEST_SECRET }}' >> android/keystore.properties
+          echo 'keyAlias=${{ secrets.TEST_SECRET }}' >> android/keystore.properties
           echo 'storeFile=app/keystore.jks' >> android/keystore.properties
+      - name: show file
+        run: cat android/keystore.properties
       - name: Build
         run: flutter build apk
       - name: List files
@@ -105,8 +107,7 @@ jobs:
       - name: Zip windows
         run: cd artifacts/visualtimer_linux; zip -r ../visualtimer_windows.zip ./
 
-      - uses: softprops/action-gh-release@v1
-        with:
+      - uses: softprops/action-gh-release@v1        with:
           fail_on_unmatched_files: true
           files: |
             ./artifacts/visualtimer_linux.zip
