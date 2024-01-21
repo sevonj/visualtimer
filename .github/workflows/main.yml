@@ -33,8 +33,8 @@ jobs:
       - uses: subosito/flutter-action@v2
       - name: Secrets
         run: |
-          echo "${{ secrets.TEST_SECRET }}" > android/keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.TEST_SECRET }}" --batch android/keystore.jks.asc > android/app/keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
+          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch android/keystore.jks.asc > android/app/keystore.jks
           echo "${{ secrets.TEST_SECRET }}" > android/keystore.properties.asc
           gpg -d --passphrase "${{ secrets.TEST_SECRET }}" --batch android/keystore.properties.asc > android/keystore.properties
       - name: display test secret
