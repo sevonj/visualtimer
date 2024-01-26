@@ -34,8 +34,6 @@ jobs:
         with:
           flutter-version: '3.13.9'
       - run: flutter pub get
-      - name: test keytool
-        run: keytool
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
@@ -45,7 +43,7 @@ jobs:
           echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
           echo 'storeFile=app/keystore.jks' >> android/keystore.properties
       - name: Build
-        run: flutter build apk
+        run: flutter build apk -v
       - name: List files
         run: ls -R build/app/outputs/flutter-apk
       - name: Create artifact
