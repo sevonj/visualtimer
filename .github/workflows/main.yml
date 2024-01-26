@@ -31,6 +31,8 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.9'
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
