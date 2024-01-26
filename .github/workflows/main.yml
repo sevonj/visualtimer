@@ -33,6 +33,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.9'
+      - run: flutter pub get
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
