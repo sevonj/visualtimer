@@ -39,8 +39,6 @@ jobs:
           echo 'keyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' >> android/keystore.properties
           echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
           echo 'storeFile=app/keystore.jks' >> android/keystore.properties
-      - name: show file
-        run: cat android/keystore.properties
       - name: Build
         run: flutter build apk
       - name: List files
