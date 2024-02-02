@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -85,7 +86,11 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(data.appName, textScaleFactor: 1.5),
-            Text('version: ${data.version}', textAlign: TextAlign.left),
+            Text(
+                kDebugMode
+                    ? 'version: ${data.version}+${data.buildNumber} DEBUG'
+                    : 'version: ${data.version}+${data.buildNumber}',
+                textAlign: TextAlign.left),
           ],
         );
       },
