@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visualtimer/pages/timer.dart';
+import 'package:visualtimer/themes/dark.dart';
+import 'package:visualtimer/themes/light.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,11 +17,9 @@ class TimerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Visual Timer',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.deepPurple, brightness: Brightness.dark),
-        useMaterial3: true,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
       home: const TimerPage(),
     );
   }
