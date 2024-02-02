@@ -4,6 +4,18 @@ import '../../main.dart';
 
 class AppearanceSettings extends StatefulWidget {
   const AppearanceSettings({super.key});
+
+  static String getCurrentThemeName() {
+    switch (TimerApp.themeNotifier.value) {
+      case ThemeMode.system:
+        return "Follow system";
+      case ThemeMode.light:
+        return "Light mode";
+      case ThemeMode.dark:
+        return "Dark mode";
+    }
+  }
+
   @override
   State<AppearanceSettings> createState() => _AppearanceSettingsState();
 }

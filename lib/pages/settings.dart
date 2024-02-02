@@ -12,9 +12,14 @@ _launchUrl() async {
   }
 }
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   Future<PackageInfo> _getPackageInfo() {
     return PackageInfo.fromPlatform();
   }
@@ -52,11 +57,13 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text("Appearance"),
-            subtitle: const Text('theme theme theme theme'),
+            subtitle:
+                Text('Theme: ${AppearanceSettings.getCurrentThemeName()}'),
             onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AppearanceSettings())),
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AppearanceSettings()))
+                .then((_) => setState(() {})),
             leading: const Icon(Icons.brightness_6),
           ),
         ],
