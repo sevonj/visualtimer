@@ -33,7 +33,10 @@ class SettingsPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const FlutterLogo(size: 64),
+                  SizedBox(
+                    width: 64,
+                    child: Image.asset("res/app_icon_transparent.png"),
+                  ),
                   const Padding(padding: EdgeInsets.all(8)),
                   buildAppInfo(),
                 ],
