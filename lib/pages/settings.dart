@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visualtimer/pages/settings/appearance_settings.dart';
 
 _launchUrl() async {
   var url = Uri.parse("https://github.com/sevonj/visualtimer");
@@ -11,9 +12,14 @@ _launchUrl() async {
   }
 }
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   Future<PackageInfo> _getPackageInfo() {
     return PackageInfo.fromPlatform();
   }
@@ -48,6 +54,17 @@ class SettingsPage extends StatelessWidget {
             subtitle: Text('Bug reports, feature requests, source code'),
             onTap: _launchUrl,
             leading: Icon(Icons.code),
+          ),
+          ListTile(
+            title: const Text("Appearance"),
+            subtitle:
+                Text('Theme: ${AppearanceSettings.getCurrentThemeName()}'),
+            onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AppearanceSettings()))
+                .then((_) => setState(() {})),
+            leading: const Icon(Icons.brightness_6),
           ),
         ],
       ),
