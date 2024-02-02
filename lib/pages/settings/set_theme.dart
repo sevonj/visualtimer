@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
-class AppearanceSettings extends StatelessWidget {
+import '../../main.dart';
+
+class AppearanceSettings extends StatefulWidget {
   const AppearanceSettings({super.key});
+  @override
+  State<AppearanceSettings> createState() => _AppearanceSettingsState();
+}
 
-  Future<PackageInfo> _getPackageInfo() {
-    return PackageInfo.fromPlatform();
+class _AppearanceSettingsState extends State<AppearanceSettings> {
+  void setTheme(ThemeMode? themeMode) {
+    setState(() {
+      if (themeMode != null) TimerApp.themeNotifier.value = themeMode;
+    });
   }
 
   @override
@@ -15,25 +22,28 @@ class AppearanceSettings extends StatelessWidget {
         title: const Text('Appearance'),
       ),
       body: ListView(
-        children: const [
-          ListTile(
-            title: Text("thememode"),
-          ),
+        children: [
           RadioListTile(
-              title: Text("Follow system"),
-              value: 0,
-              groupValue: null,
-              onChanged: null),
+              title: const Text("Follow system"),
+              value: ThemeMode.system,
+              groupValue: TimerApp.themeNotifier.value,
+              onChanged: (ThemeMode? value) {
+                setTheme(value);
+              }),
           RadioListTile(
-              title: Text("Light mode"),
-              value: 0,
-              groupValue: null,
-              onChanged: null),
+              title: const Text("Light mode"),
+              value: ThemeMode.light,
+              groupValue: TimerApp.themeNotifier.value,
+              onChanged: (ThemeMode? value) {
+                setTheme(value);
+              }),
           RadioListTile(
-              title: Text("Dark mode"),
-              value: 0,
-              groupValue: null,
-              onChanged: null),
+              title: const Text("Dark mode"),
+              value: ThemeMode.dark,
+              groupValue: TimerApp.themeNotifier.value,
+              onChanged: (ThemeMode? value) {
+                setTheme(value);
+              }),
         ],
       ),
     );

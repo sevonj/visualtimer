@@ -10,17 +10,24 @@ void main() async {
 }
 
 class TimerApp extends StatelessWidget {
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.system);
+
   const TimerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Visual Timer',
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      home: const TimerPage(),
-    );
+    return ValueListenableBuilder(
+        valueListenable: themeNotifier,
+        builder: (_, ThemeMode currentMode, __) {
+          return MaterialApp(
+            title: 'Visual Timer',
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: currentMode,
+            home: const TimerPage(),
+          );
+        });
   }
 }
