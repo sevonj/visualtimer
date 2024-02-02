@@ -34,6 +34,7 @@ jobs:
         with:
           flutter-version: '3.13.9'
       - run: flutter pub get
+      - run: dart run flutter_launcher_icons
       - name: Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
