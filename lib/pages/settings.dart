@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visualtimer/pages/settings/set_theme.dart';
 
 _launchUrl() async {
   var url = Uri.parse("https://github.com/sevonj/visualtimer");
@@ -48,6 +49,15 @@ class SettingsPage extends StatelessWidget {
             subtitle: Text('Bug reports, feature requests, source code'),
             onTap: _launchUrl,
             leading: Icon(Icons.code),
+          ),
+          ListTile(
+            title: const Text("Appearance"),
+            subtitle: const Text('theme theme theme theme'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppearanceSettings())),
+            leading: const Icon(Icons.brightness_6),
           ),
         ],
       ),
