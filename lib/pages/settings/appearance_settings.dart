@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 
@@ -21,10 +22,15 @@ class AppearanceSettings extends StatefulWidget {
 }
 
 class _AppearanceSettingsState extends State<AppearanceSettings> {
-  void setTheme(ThemeMode? themeMode) {
+  void setTheme(ThemeMode? themeMode) async {
+    if (themeMode == null) return;
+
     setState(() {
-      if (themeMode != null) TimerApp.themeNotifier.value = themeMode;
+      TimerApp.themeNotifier.value = themeMode;
     });
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("themeMode", themeMode.toString());
   }
 
   @override
