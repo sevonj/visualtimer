@@ -43,7 +43,7 @@ jobs:
           echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
           echo 'storeFile=app/keystore.jks' >> android/keystore.properties
       - name: Build
-        run: flutter build apk -v
+        run: flutter build apk --release
       - name: List files
         run: ls -R build/app/outputs/flutter-apk
       - name: Create artifact
