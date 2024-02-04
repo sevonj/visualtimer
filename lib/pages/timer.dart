@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -98,7 +99,9 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double width = min(screenWidth * .9, screenHeight * .7);
+    double width = clampDouble(
+        min(screenWidth * .9, screenHeight * .7 - 64), 230, double.infinity);
+
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
@@ -117,87 +120,89 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
       body: Center(
-        child: SizedBox(
-          width: width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(height: 16),
-              Stack(
-                children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: 1,
-                    child: CustomPaint(
-                      foregroundPainter: TimerPainter(
-                        minutes: _timer.isRunning
-                            ? _getTimeLeft()
-                            : _counter.toDouble(),
-                        colorScheme: Theme.of(context).colorScheme,
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: CustomPaint(
+                        foregroundPainter: TimerPainter(
+                          minutes: _timer.isRunning
+                              ? _getTimeLeft()
+                              : _counter.toDouble(),
+                          colorScheme: Theme.of(context).colorScheme,
+                        ),
                       ),
                     ),
-                  ),
-                  AspectRatio(
-                    aspectRatio: 1,
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                            _timer.isRunning ? Icons.stop : Icons.play_arrow,
-                            size: width * .315),
-                        onPressed: _counter <= 0 ? null : () => _togglePlay(),
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Center(
+                        child: IconButton(
+                          icon: Icon(
+                              _timer.isRunning ? Icons.stop : Icons.play_arrow,
+                              size: width * .315),
+                          onPressed: _counter <= 0 ? null : () => _togglePlay(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              AnimatedSize(
-                curve: Curves.easeInOut,
-                duration: const Duration(milliseconds: 200),
-                child: Visibility(
-                  visible: !_timer.isRunning,
-                  child: Column(children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          IconButton(
-                            icon: const Icon(Icons.remove),
-                            onPressed:
-                                _counter <= 0 ? null : () => _decrementTime(),
-                          ),
-                          Text(
-                            '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed:
-                                _counter >= 60 ? null : () => _incrementTime(),
-                          ),
-                        ]),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: SegmentedButton<TimerMode>(
-                        segments: const [
-                          ButtonSegment<TimerMode>(
-                              value: TimerMode.seconds,
-                              label: Text('Seconds', textScaleFactor: 1.2)),
-                          ButtonSegment<TimerMode>(
-                              value: TimerMode.minutes,
-                              label: Text('Minutes', textScaleFactor: 1.2)),
-                        ],
-                        selected: {_mode},
-                        onSelectionChanged: (Set<TimerMode> newSelection) {
-                          setState(() {
-                            _mode = newSelection.first;
-                          });
-                        },
-                      ),
-                    ),
-                  ]),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                AnimatedSize(
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 200),
+                  child: Visibility(
+                    visible: !_timer.isRunning,
+                    child: Column(children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed:
+                                  _counter <= 0 ? null : () => _decrementTime(),
+                            ),
+                            Text(
+                              '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: _counter >= 60
+                                  ? null
+                                  : () => _incrementTime(),
+                            ),
+                          ]),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: SegmentedButton<TimerMode>(
+                          segments: const [
+                            ButtonSegment<TimerMode>(
+                                value: TimerMode.seconds,
+                                label: Text('Seconds', textScaleFactor: 1.2)),
+                            ButtonSegment<TimerMode>(
+                                value: TimerMode.minutes,
+                                label: Text('Minutes', textScaleFactor: 1.2)),
+                          ],
+                          selected: {_mode},
+                          onSelectionChanged: (Set<TimerMode> newSelection) {
+                            setState(() {
+                              _mode = newSelection.first;
+                            });
+                          },
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
