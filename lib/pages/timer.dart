@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:visualtimer/main.dart';
 import 'package:visualtimer/pages/settings.dart';
 import 'package:visualtimer/pages/timer/timer_ring.dart';
 import 'package:visualtimer/util/platform.dart';
@@ -77,6 +79,12 @@ class _TimerPageState extends State<TimerPage> {
     }
   }
 
+  void _vibrate() async {
+    if (!await Vibrate.canVibrate) return;
+    if (!TimerApp.vibrateNotifier.value) return;
+    Vibrate.vibrate();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -90,6 +98,7 @@ class _TimerPageState extends State<TimerPage> {
             textAlign: TextAlign.center,
           )));
           _stop(0);
+          _vibrate();
         }
       });
     });
