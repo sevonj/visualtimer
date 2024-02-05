@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visualtimer/common/listmenu.dart';
 import 'package:visualtimer/pages/settings/appearance_settings.dart';
 
 _launchUrl() async {
@@ -29,49 +30,61 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About'),
+        title: const Text('Preferences'),
       ),
-      body: ListView(
+      body: jylsListMenu(
         children: [
-          FractionallySizedBox(
-            widthFactor: .75,
-            child: Container(
-              margin: const EdgeInsets.only(top: 32, bottom: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: 64,
-                    child: Image.asset("res/app_icon_transparent.png"),
-                  ),
-                  const Padding(padding: EdgeInsets.all(8)),
-                  buildAppInfo(),
-                ],
-              ),
-            ),
-          ),
-          const ListTile(
-            title: Text("View project on GitHub"),
-            subtitle: Text('Bug reports, feature requests, source code'),
-            onTap: _launchUrl,
-            leading: Icon(Icons.code),
-          ),
-          ListTile(
-            title: const Text("Appearance"),
-            subtitle:
-                Text('Theme: ${AppearanceSettings.getCurrentThemeName()}'),
-            onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AppearanceSettings()))
-                .then((_) => setState(() {})),
-            leading: const Icon(Icons.brightness_6),
-          ),
+          appInfoItem(),
+          gitHubItem(),
+          appearanceItem(),
         ],
       ),
     );
   }
 
+  Widget appInfoItem() {
+    return FractionallySizedBox(
+      widthFactor: .75,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 64,
+              child: Image.asset("res/app_icon_transparent.png"),
+            ),
+            const Padding(padding: EdgeInsets.all(8)),
+            buildAppInfo(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget gitHubItem() {
+    return ListTile(
+      title: Text("View project on GitHub"),
+      subtitle: Text('Bug reports, feature requests, source code'),
+      onTap: _launchUrl,
+      leading: Icon(Icons.code),
+    );
+  }
+
+  Widget appearanceItem() {
+    return ListTile(
+      title: const Text("Appearance"),
+      subtitle: Text('Theme: ${AppearanceSettings.getCurrentThemeName()}'),
+      onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AppearanceSettings()))
+          .then((_) => setState(() {})),
+      leading: const Icon(Icons.brightness_6),
+    );
+  }
+
+  // Fetches appinfo for appInfoItem
   FutureBuilder<PackageInfo> buildAppInfo() {
     return FutureBuilder<PackageInfo>(
       future: _getPackageInfo(),
