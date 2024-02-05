@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visualtimer/common/listmenu.dart';
+import 'package:visualtimer/main.dart';
 import 'package:visualtimer/pages/settings/appearance_settings.dart';
 
 _launchUrl() async {
@@ -26,6 +29,17 @@ class _SettingsPageState extends State<SettingsPage> {
     return PackageInfo.fromPlatform();
   }
 
+  void setVibrate(bool? vibrate) async {
+    if (vibrate == null) return;
+
+    setState(() {
+      TimerApp.vibrateNotifier.value = vibrate;
+    });
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("vibrate", vibrate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
           appInfoItem(),
           gitHubItem(),
           appearanceItem(),
+          vibrateItem(),
         ],
       ),
     );
@@ -63,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget gitHubItem() {
-    return ListTile(
+    return const ListTile(
       title: Text("View project on GitHub"),
       subtitle: Text('Bug reports, feature requests, source code'),
       onTap: _launchUrl,
@@ -84,7 +99,28 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // Fetches appinfo for appInfoItem
+  FutureBuilder<bool> vibrateItem() {
+    return FutureBuilder<bool>(
+      future: Vibrate.canVibrate,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasError) {
+          return const SizedBox();
+        } else if (!snapshot.hasData) {
+          return const Text('Fetching canVibrate...');
+        }
+        final data = snapshot.data!;
+        return CheckboxListTile(
+            title: const Text("Vibration"),
+            subtitle: const Text('Vibrate on time out'),
+            value: TimerApp.vibrateNotifier.value,
+            onChanged: (bool? value) {
+              setVibrate(value);
+            });
+      },
+    );
+  }
+
+// Fetches appinfo for appInfoItem
   FutureBuilder<PackageInfo> buildAppInfo() {
     return FutureBuilder<PackageInfo>(
       future: _getPackageInfo(),
