@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visualtimer/common/listmenu.dart';
 
 import '../../main.dart';
 
@@ -39,7 +40,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
       appBar: AppBar(
         title: const Text('Appearance'),
       ),
-      body: ListView(
+      body: jylsListMenu(
         children: [
           RadioListTile(
               title: const Text("Follow system"),
