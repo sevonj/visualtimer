@@ -124,6 +124,7 @@ jobs:
             ./artifacts/visualtimer_linux.zip
             ./artifacts/visualtimer_windows.zip
             ./artifacts/visualtimer_apk/app-release.apk
+            ./artifacts/visualtimer_bundle/app-release.aab
 
       - name: Deploy Web
         uses: JamesIves/github-pages-deploy-action@v4
