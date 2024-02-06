@@ -59,6 +59,7 @@ class _TimerAppState extends State<TimerApp> {
             darkTheme: darkTheme,
             themeMode: currentMode,
             home: const TimerPage(),
+            showSemanticsDebugger: false,
           );
         });
   }

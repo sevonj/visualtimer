@@ -111,7 +111,6 @@ class _TimerPageState extends State<TimerPage> {
     double size = clampDouble(
         min(screenWidth * .9, screenHeight * .7 - 64), 230, double.infinity);
 
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: _menuButton(),
@@ -142,11 +141,16 @@ class _TimerPageState extends State<TimerPage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 1,
-              child: CustomPaint(
-                foregroundPainter: TimerPainter(
-                  minutes:
-                      _timer.isRunning ? _getTimeLeft() : _counter.toDouble(),
-                  colorScheme: Theme.of(context).colorScheme,
+              child: Semantics(
+                label: _timer.isRunning
+                    ? "${_getTimeLeft().toInt()} ${_mode == TimerMode.minutes ? "minutes" : "seconds"} left."
+                    : "Timer set to $_counter ${_mode == TimerMode.minutes ? "minutes" : "seconds"}.",
+                child: CustomPaint(
+                  foregroundPainter: TimerPainter(
+                    minutes:
+                        _timer.isRunning ? _getTimeLeft() : _counter.toDouble(),
+                    colorScheme: Theme.of(context).colorScheme,
+                  ),
                 ),
               ),
             ),
@@ -154,8 +158,11 @@ class _TimerPageState extends State<TimerPage> {
               aspectRatio: 1,
               child: Center(
                 child: IconButton(
-                  icon: Icon(_timer.isRunning ? Icons.stop : Icons.play_arrow,
-                      size: size * .315),
+                  icon: Icon(
+                    _timer.isRunning ? Icons.stop : Icons.play_arrow,
+                    size: size * .315,
+                    semanticLabel: _timer.isRunning ? "Stop" : "Start timer",
+                  ),
                   onPressed: _counter <= 0 ? null : () => _togglePlay(),
                 ),
               ),
@@ -180,15 +187,23 @@ class _TimerPageState extends State<TimerPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   IconButton(
-                    icon: const Icon(Icons.remove),
+                    icon: const Icon(
+                      Icons.remove,
+                      semanticLabel: "Subtract 5",
+                    ),
                     onPressed: _counter <= 0 ? null : () => _decrementTime(),
                   ),
                   Text(
                     '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
                     style: Theme.of(context).textTheme.headlineLarge,
+                    semanticsLabel:
+                        "Timer set to $_counter ${_mode == TimerMode.minutes ? "minutes" : "seconds"}",
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add),
+                    icon: const Icon(
+                      Icons.add,
+                      semanticLabel: "Add 5",
+                    ),
                     onPressed: _counter >= 60 ? null : () => _incrementTime(),
                   ),
                 ]),
@@ -198,11 +213,21 @@ class _TimerPageState extends State<TimerPage> {
               child: SegmentedButton<TimerMode>(
                 segments: const [
                   ButtonSegment<TimerMode>(
-                      value: TimerMode.seconds,
-                      label: Text('Seconds', textScaleFactor: 1.2)),
+                    value: TimerMode.seconds,
+                    label: Text(
+                      'Seconds',
+                      textScaleFactor: 1.2,
+                      semanticsLabel: "Set mode: Seconds",
+                    ),
+                  ),
                   ButtonSegment<TimerMode>(
-                      value: TimerMode.minutes,
-                      label: Text('Minutes', textScaleFactor: 1.2)),
+                    value: TimerMode.minutes,
+                    label: Text(
+                      'Minutes',
+                      textScaleFactor: 1.2,
+                      semanticsLabel: "Set mode: Minutes",
+                    ),
+                  ),
                 ],
                 selected: {_mode},
                 onSelectionChanged: (Set<TimerMode> newSelection) {
@@ -231,7 +256,10 @@ class _TimerPageState extends State<TimerPage> {
                       builder: (context) => const SettingsPage())),
               foregroundColor: colorScheme.onSurfaceVariant,
               backgroundColor: colorScheme.surfaceVariant,
-              child: const Icon(Icons.menu),
+              child: const Icon(
+                Icons.menu,
+                semanticLabel: "Preferences",
+              ),
             ),
           );
   }
