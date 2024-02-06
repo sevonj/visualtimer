@@ -43,11 +43,19 @@ jobs:
           echo 'keyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' >> android/keystore.properties
           echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
           echo 'storeFile=keystore.jks' >> android/keystore.properties
-      - name: Build
+
+      - name: Build Bundle
+        run: flutter build appbundle --release
+      - name: Build APK
         run: flutter build apk --release
       - name: List files
-        run: ls -R build/app/outputs/flutter-apk
-      - name: Create artifact
+        run: ls -R build/app/outputs/flutter-apk ; ls -R build/app/outputs/appbundle
+      - name: Create Bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: visualtimer_bundle
+          path: build/app/outputs/bundle/release/app-release.aab
+      - name: Create APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: visualtimer_apk
