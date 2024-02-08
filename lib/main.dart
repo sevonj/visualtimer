@@ -14,6 +14,8 @@ class TimerApp extends StatefulWidget {
   const TimerApp({super.key});
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<TimerMode> timerModeNotifier =
+      ValueNotifier(TimerMode.minutes);
   static final ValueNotifier<bool> vibrateNotifier = ValueNotifier(true);
 
   @override
@@ -31,6 +33,13 @@ class _TimerAppState extends State<TimerApp> {
         TimerApp.themeNotifier.value = ThemeMode.dark;
       default:
         TimerApp.themeNotifier.value = ThemeMode.system;
+    }
+
+    switch (prefs.getString('timerMode')) {
+      case "TimerMode.seconds":
+        TimerApp.timerModeNotifier.value = TimerMode.seconds;
+      default:
+        TimerApp.timerModeNotifier.value = TimerMode.minutes;
     }
 
     switch (prefs.getBool('vibrate')) {
