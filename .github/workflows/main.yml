@@ -35,7 +35,19 @@ jobs:
           flutter-version: '3.13.9'
       - run: flutter pub get
       - run: dart run flutter_launcher_icons
-      - name: Secrets
+
+      - name: Bundle Secrets
+        run: |
+          echo "${{ secrets.UPLOAD_KEYSTORE }}" > android/upload-keystore.jks.asc
+          gpg -d --passphrase='${{ secrets.UPLOAD_KEYSTORE_PASSPHRASE }}' --batch android/upload-keystore.jks.asc > android/app/upload-keystore.jks
+          echo 'storePassword=${{ secrets.UPLOAD_KEYSTORE_PASSPHRASE }}' > android/keystore.properties
+          echo 'keyPassword=${{ secrets.UPLOAD_KEYSTORE_PASSPHRASE }}' >> android/keystore.properties
+          echo 'keyAlias=${{ secrets.UPLOAD_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
+          echo 'storeFile=upload-keystore.jks' >> android/keystore.properties
+      - name: Build Bundle
+        run: flutter build appbundle --release
+
+      - name: APK Secrets
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > android/keystore.jks.asc
           gpg -d --passphrase='${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' --batch android/keystore.jks.asc > android/app/keystore.jks
@@ -43,11 +55,9 @@ jobs:
           echo 'keyPassword=${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}' >> android/keystore.properties
           echo 'keyAlias=${{ secrets.ANDROID_KEYSTORE_KEYALIAS }}' >> android/keystore.properties
           echo 'storeFile=keystore.jks' >> android/keystore.properties
-
-      - name: Build Bundle
-        run: flutter build appbundle --release
       - name: Build APK
         run: flutter build apk --release
+
       - name: List files
         run: ls -R build/app/outputs/flutter-apk ; ls -R build/app/outputs/bundle
       - name: Create Bundle artifact
