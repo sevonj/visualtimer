@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:visualtimer/common/listmenu.dart';
 import 'package:visualtimer/main.dart';
 import 'package:visualtimer/pages/settings/appearance_settings.dart';
+import 'package:visualtimer/pages/settings/licenses.dart';
 
 _launchUrl() async {
   var url = Uri.parse("https://github.com/sevonj/visualtimer");
@@ -52,6 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
           gitHubItem(),
           appearanceItem(),
           vibrateItem(),
+          licensesItem(),
         ],
       ),
     );
@@ -117,6 +119,17 @@ class _SettingsPageState extends State<SettingsPage> {
               setVibrate(value);
             });
       },
+    );
+  }
+
+  Widget licensesItem() {
+    return ListTile(
+      title: const Text("Acknowledgements"),
+      subtitle: const Text('Open-source components'),
+      onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const LicenseSettings()))
+          .then((_) => setState(() {})),
+      leading: const Icon(Icons.library_books),
     );
   }
 
