@@ -22,10 +22,16 @@ class LicenseSettings extends StatelessWidget {
       ),
       body: jylsListMenu(
         children: [
-          const Text('This app relies on the following projects:',
-              textScaleFactor: 1.5),
+          const Text('This app relies on a number of open-source projects.',
+              textScaleFactor: 1.15),
           const SizedBox(height: 16),
-          for (Package license in ossLicenses) _licenseTile(context, license),
+          const Text('Direct dependencies:', textScaleFactor: 1.5),
+          for (Package package in ossLicenses)
+            if (package.isDirectDependency) _licenseTile(context, package),
+          const SizedBox(height: 16),
+          const Text('Indirect dependencies:', textScaleFactor: 1.5),
+          for (Package package in ossLicenses)
+            if (!package.isDirectDependency) _licenseTile(context, package),
         ],
       ),
     );
