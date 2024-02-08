@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visualtimer/main.dart';
 import 'package:visualtimer/pages/settings.dart';
 import 'package:visualtimer/pages/timer/timer_ring.dart';
@@ -19,7 +20,6 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
-  TimerMode _mode = TimerMode.minutes;
   int _counter = 0;
   Timer? _updateTimer;
   final Stopwatch _timer = Stopwatch();
@@ -71,7 +71,7 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   double _getTimeLeft() {
-    switch (_mode) {
+    switch (TimerApp.timerModeNotifier.value) {
       case TimerMode.minutes:
         return _counter.toDouble() - _timer.elapsed.inMilliseconds / 60 / 1000;
       case TimerMode.seconds:
@@ -83,6 +83,11 @@ class _TimerPageState extends State<TimerPage> {
     if (!await Vibrate.canVibrate) return;
     if (!TimerApp.vibrateNotifier.value) return;
     Vibrate.vibrate();
+  }
+
+  void _setMode(TimerMode mode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("timerMode", mode.toString());
   }
 
   @override
@@ -143,8 +148,8 @@ class _TimerPageState extends State<TimerPage> {
               aspectRatio: 1,
               child: Semantics(
                 label: _timer.isRunning
-                    ? "${_getTimeLeft().toInt()} ${_mode == TimerMode.minutes ? "minutes" : "seconds"} left."
-                    : "Timer set to $_counter ${_mode == TimerMode.minutes ? "minutes" : "seconds"}.",
+                    ? "${_getTimeLeft().toInt()} ${TimerApp.timerModeNotifier.value == TimerMode.minutes ? "minutes" : "seconds"} left."
+                    : "Timer set to $_counter ${TimerApp.timerModeNotifier.value == TimerMode.minutes ? "minutes" : "seconds"}.",
                 child: CustomPaint(
                   foregroundPainter: TimerPainter(
                     minutes:
@@ -197,7 +202,7 @@ class _TimerPageState extends State<TimerPage> {
                     '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
                     style: Theme.of(context).textTheme.headlineLarge,
                     semanticsLabel:
-                        "Timer set to $_counter ${_mode == TimerMode.minutes ? "minutes" : "seconds"}",
+                        "Timer set to $_counter ${TimerApp.timerModeNotifier.value == TimerMode.minutes ? "minutes" : "seconds"}",
                   ),
                   IconButton(
                     icon: const Icon(
@@ -229,10 +234,11 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                   ),
                 ],
-                selected: {_mode},
+                selected: {TimerApp.timerModeNotifier.value},
                 onSelectionChanged: (Set<TimerMode> newSelection) {
                   setState(() {
-                    _mode = newSelection.first;
+                    TimerApp.timerModeNotifier.value = newSelection.first;
+                    _setMode(TimerApp.timerModeNotifier.value);
                   });
                 },
               ),
