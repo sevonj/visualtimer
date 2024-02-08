@@ -2,9 +2,8 @@
 
 Concentrate on a task with minimal distractions, up to an hour.
 
-Available for PC, Android (soon), and as a [webpage](https://sevonj.github.io/visualtimer/).
+Available for PC, Android, and as a [webpage](https://sevonj.github.io/visualtimer/).
 
-
-<img src="https://github.com/sevonj/visualtimer/assets/100710152/32dd18df-a668-4aa0-a400-3cd1d799a627" width="256" /> ![Screenshot from 2024-01-19 14-20-00](https://github.com/sevonj/visualtimer/assets/100710152/7f190d25-b7fe-48b4-a712-953b77cdf273)
+<img src="https://github.com/sevonj/visualtimer/assets/100710152/3d7aaa1f-9f24-4428-8184-13dc2f3a798c" width="256" /> ![image](https://github.com/sevonj/visualtimer/assets/100710152/46bacc41-51b4-4d77-823d-8bfefbda9a46)
 
 [Backlog](https://github.com/users/sevonj/projects/6)
