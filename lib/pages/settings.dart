@@ -112,12 +112,14 @@ class _SettingsPageState extends State<SettingsPage> {
         }
         final data = snapshot.data!;
         return CheckboxListTile(
-            title: const Text("Vibration"),
-            subtitle: const Text('Vibrate on time out'),
-            value: TimerApp.vibrateNotifier.value,
-            onChanged: (bool? value) {
-              setVibrate(value);
-            });
+          title: const Text("Vibration"),
+          subtitle: const Text('Vibrate on time out'),
+          secondary: const Icon(Icons.vibration),
+          value: TimerApp.vibrateNotifier.value,
+          onChanged: (bool? value) {
+            setVibrate(value);
+          },
+        );
       },
     );
   }
