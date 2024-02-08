@@ -109,3 +109,8 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "res/app_icon_transparent.png"
+
+  # Web
+  web:
+    generate: true
+    image_path: "res/app_icon_transparent.png"
