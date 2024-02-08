@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visualtimer/common/listmenu.dart';
 import 'package:visualtimer/pages/settings/oss_licenses.dart';
 
 class LicenseSettings extends StatelessWidget {
   const LicenseSettings({super.key});
+
+  Future<Package> _getSelfPackage() async {
+    PackageInfo packageinfo = await PackageInfo.fromPlatform();
+    return Package(
+      name: packageinfo.packageName,
+      description: 'A visual timer app.',
+      repository: 'https://github.com/sevonj/visualtimer',
+      authors: [],
+      version: '${packageinfo.version}+${packageinfo.buildNumber}',
+      license: await rootBundle.loadString('LICENSE'),
+      isMarkdown: false,
+      isSdk: false,
+      isDirectDependency: false,
+    );
+  }
 
   Widget _licenseTile(BuildContext context, Package package) {
     return ListTile(
@@ -22,8 +39,21 @@ class LicenseSettings extends StatelessWidget {
       ),
       body: jylsListMenu(
         children: [
-          const Text('This app relies on a number of open-source projects.',
-              textScaleFactor: 1.15),
+          const Text('This app:', textScaleFactor: 1.5),
+          FutureBuilder<Package>(
+              future: _getSelfPackage(),
+              builder: (BuildContext context, AsyncSnapshot<Package> snapshot) {
+                if (snapshot.hasError) {
+                  return const SizedBox();
+                } else if (!snapshot.hasData) {
+                  return const Text('Fetching this app...');
+                }
+                return _licenseTile(context, snapshot.data!);
+              }),
+          const SizedBox(height: 24),
+          const Text(
+              'This app relies on a number of other open-source projects.',
+              textScaleFactor: 1.0),
           const SizedBox(height: 16),
           const Text('Direct dependencies:', textScaleFactor: 1.5),
           for (Package package in ossLicenses)
