@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -15,6 +16,7 @@ enum TimerMode { minutes, seconds }
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
+
   @override
   State<TimerPage> createState() => _TimerPageState();
 }
@@ -188,61 +190,9 @@ class _TimerPageState extends State<TimerPage> {
           visible: !_timer.isRunning,
           child: Column(children: [
             const SizedBox(height: 16),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove,
-                      semanticLabel: "Subtract 5",
-                    ),
-                    onPressed: _counter <= 0 ? null : () => _decrementTime(),
-                  ),
-                  Text(
-                    '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    semanticsLabel:
-                        "Timer set to $_counter ${TimerApp.timerModeNotifier.value == TimerMode.minutes ? "minutes" : "seconds"}",
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.add,
-                      semanticLabel: "Add 5",
-                    ),
-                    onPressed: _counter >= 60 ? null : () => _incrementTime(),
-                  ),
-                ]),
+            _timeAdjustment(),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<TimerMode>(
-                segments: const [
-                  ButtonSegment<TimerMode>(
-                    value: TimerMode.seconds,
-                    label: Text(
-                      'Seconds',
-                      textScaleFactor: 1.2,
-                      semanticsLabel: "Set mode: Seconds",
-                    ),
-                  ),
-                  ButtonSegment<TimerMode>(
-                    value: TimerMode.minutes,
-                    label: Text(
-                      'Minutes',
-                      textScaleFactor: 1.2,
-                      semanticsLabel: "Set mode: Minutes",
-                    ),
-                  ),
-                ],
-                selected: {TimerApp.timerModeNotifier.value},
-                onSelectionChanged: (Set<TimerMode> newSelection) {
-                  setState(() {
-                    TimerApp.timerModeNotifier.value = newSelection.first;
-                    _setMode(TimerApp.timerModeNotifier.value);
-                  });
-                },
-              ),
-            ),
+            _modeSegments(),
           ]),
         ),
       ),
@@ -268,5 +218,62 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
           );
+  }
+
+  Widget _timeAdjustment() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        IconButton(
+          icon: const Icon(
+            Icons.remove,
+            semanticLabel: "Subtract 5",
+          ),
+          onPressed: _counter <= 0 ? null : () => _decrementTime(),
+        ),
+        Text(
+          '${_timer.isRunning ? _getTimeLeft().toInt() : _counter}',
+          style: Theme.of(context).textTheme.headlineLarge,
+          semanticsLabel:
+              "Timer set to $_counter ${TimerApp.timerModeNotifier.value == TimerMode.minutes ? "minutes" : "seconds"}",
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.add,
+            semanticLabel: "Add 5",
+          ),
+          onPressed: _counter >= 60 ? null : () => _incrementTime(),
+        ),
+      ],
+    );
+  }
+
+  Widget _modeSegments() {
+    bool isSec = TimerApp.timerModeNotifier.value == TimerMode.seconds;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return CupertinoSlidingSegmentedControl(
+        backgroundColor: colorScheme.surface,
+        thumbColor: colorScheme.surfaceVariant,
+        groupValue: TimerApp.timerModeNotifier.value,
+        onValueChanged: (TimerMode? value) {
+          setState(() {
+            if (value != null) TimerApp.timerModeNotifier.value = value;
+          });
+        },
+        children: const <TimerMode, Widget>{
+          TimerMode.seconds: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text('Seconds',
+                textScaler: TextScaler.linear(1.2),
+                semanticsLabel: "Set mode: Seconds"),
+          ),
+          TimerMode.minutes: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text('Minutes',
+                textScaler: TextScaler.linear(1.2),
+                semanticsLabel: "Set mode: Minutes"),
+          ),
+        },
+    );
   }
 }
