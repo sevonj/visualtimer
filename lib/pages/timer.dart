@@ -57,7 +57,6 @@ class _TimerPageState extends State<TimerPage> {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       }
       _updateTimer = null;
-
       _timer.stop();
       _timer.reset();
       _counter = minutes;
@@ -190,9 +189,9 @@ class _TimerPageState extends State<TimerPage> {
           visible: !_timer.isRunning,
           child: Column(children: [
             const SizedBox(height: 16),
-            _timeAdjustment(),
+            _timeSetter(),
             const SizedBox(height: 16),
-            _modeSegments(),
+            _modeSetter(),
           ]),
         ),
       ),
@@ -220,7 +219,7 @@ class _TimerPageState extends State<TimerPage> {
           );
   }
 
-  Widget _timeAdjustment() {
+  Widget _timeSetter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
@@ -248,32 +247,31 @@ class _TimerPageState extends State<TimerPage> {
     );
   }
 
-  Widget _modeSegments() {
-    bool isSec = TimerApp.timerModeNotifier.value == TimerMode.seconds;
+  Widget _modeSetter() {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CupertinoSlidingSegmentedControl(
-        backgroundColor: colorScheme.surface,
-        thumbColor: colorScheme.surfaceVariant,
-        groupValue: TimerApp.timerModeNotifier.value,
-        onValueChanged: (TimerMode? value) {
-          setState(() {
-            if (value != null) TimerApp.timerModeNotifier.value = value;
-          });
-        },
-        children: const <TimerMode, Widget>{
-          TimerMode.seconds: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Seconds',
-                textScaler: TextScaler.linear(1.2),
-                semanticsLabel: "Set mode: Seconds"),
-          ),
-          TimerMode.minutes: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Minutes',
-                textScaler: TextScaler.linear(1.2),
-                semanticsLabel: "Set mode: Minutes"),
-          ),
-        },
+      backgroundColor: colorScheme.surface,
+      thumbColor: colorScheme.surfaceVariant,
+      groupValue: TimerApp.timerModeNotifier.value,
+      onValueChanged: (TimerMode? value) {
+        setState(() {
+          if (value != null) _setMode(value);
+        });
+      },
+      children: const <TimerMode, Widget>{
+        TimerMode.seconds: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text('Seconds',
+              textScaler: TextScaler.linear(1.2),
+              semanticsLabel: "Set mode: Seconds"),
+        ),
+        TimerMode.minutes: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text('Minutes',
+              textScaler: TextScaler.linear(1.2),
+              semanticsLabel: "Set mode: Minutes"),
+        ),
+      },
     );
   }
 }
