@@ -24,10 +24,10 @@ if (flutterVersionName == null) {
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
-if (!keystorePropertiesFile.exists()) {
-  throw new GradleException('missing keystore properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
     namespace "org.jyl.visualtimer"
@@ -57,21 +57,26 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
-    
+
     signingConfigs {
-        release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+        if (keystorePropertiesFile.exists()) {
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
-    
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.release
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            }else {
+                logger.warn('keystorePropertiesFile doesn\'t exist.')
+                signingConfig signingConfigs.debug
+            }
         }
     }
 }

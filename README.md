@@ -17,9 +17,10 @@ Install using [JetBrains Toolbox](https://www.jetbrains.com/toolbox-app/) or [do
 
 ### Dev problems
 
-#### Android build fails:
-See https://github.com/sevonj/visualtimer/issues/90
-
 #### Device selector is gone or missing entries:
 ![Screenshot from 2024-02-10 13-42-15](https://github.com/sevonj/visualtimer/assets/100710152/fe7deccc-cb1e-4f7e-875b-29bfda1b2ced)  
 Close project, delete the `.idea` directory, and reopen.
+
+#### ~~Android build fails:~~
+~~See https://github.com/sevonj/visualtimer/issues/90~~
+Fixed by https://github.com/sevonj/visualtimer/pull/95
