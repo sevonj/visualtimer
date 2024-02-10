@@ -87,6 +87,7 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void _setMode(TimerMode mode) async {
+    TimerApp.timerModeNotifier.value = mode;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("timerMode", mode.toString());
   }
