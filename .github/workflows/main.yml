@@ -44,6 +44,8 @@ jobs:
           echo 'storeFile=upload-keystore.jks' >> android/keystore.properties
       - name: Build Bundle
         run: flutter build appbundle --release
+      - name: Bundle Cert Hash
+        run: 'keytool -printcert -jarfile build/app/outputs/bundle/release/app-release.aab | grep SHA1: '
 
       - name: APK Secrets
         run: |
@@ -55,6 +57,8 @@ jobs:
           echo 'storeFile=keystore.jks' >> android/keystore.properties
       - name: Build APK
         run: flutter build apk --release
+      - name: APK Cert Hash
+        run: 'keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk | grep SHA1: '
 
       - name: List files
         run: ls -R build/app/outputs/flutter-apk ; ls -R build/app/outputs/bundle
