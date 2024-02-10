@@ -105,12 +105,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return FutureBuilder<bool>(
       future: Vibrate.canVibrate,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.hasError || snapshot.data == false) {
           return const SizedBox();
         } else if (!snapshot.hasData) {
           return const Text('Fetching canVibrate...');
         }
-        final data = snapshot.data!;
         return CheckboxListTile(
           title: const Text("Vibration"),
           subtitle: const Text('Vibrate on time out'),
@@ -149,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(data.appName, textScaleFactor: 1.5),
+            Text(data.appName, textScaler: const TextScaler.linear(1.5)),
             Text(
                 kDebugMode
                     ? 'version: ${data.version}+${data.buildNumber} DEBUG'

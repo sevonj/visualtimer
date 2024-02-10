@@ -39,7 +39,7 @@ class LicenseSettings extends StatelessWidget {
       ),
       body: jylsListMenu(
         children: [
-          const Text('This app:', textScaleFactor: 1.5),
+          const Text('This app:', textScaler: TextScaler.linear(1.5)),
           FutureBuilder<Package>(
               future: _getSelfPackage(),
               builder: (BuildContext context, AsyncSnapshot<Package> snapshot) {
@@ -52,14 +52,15 @@ class LicenseSettings extends StatelessWidget {
               }),
           const SizedBox(height: 24),
           const Text(
-              'This app relies on a number of other open-source projects.',
-              textScaleFactor: 1.0),
+              'This app relies on a number of other open-source projects.'),
           const SizedBox(height: 16),
-          const Text('Direct dependencies:', textScaleFactor: 1.5),
+          const Text('Direct dependencies:',
+              textScaler: TextScaler.linear(1.5)),
           for (Package package in ossLicenses)
             if (package.isDirectDependency) _licenseTile(context, package),
           const SizedBox(height: 16),
-          const Text('Indirect dependencies:', textScaleFactor: 1.5),
+          const Text('Indirect dependencies:',
+              textScaler: TextScaler.linear(1.5)),
           for (Package package in ossLicenses)
             if (!package.isDirectDependency) _licenseTile(context, package),
         ],
@@ -70,6 +71,7 @@ class LicenseSettings extends StatelessWidget {
 
 class LicenseView extends StatelessWidget {
   const LicenseView(this.package, {super.key});
+
   final Package package;
 
   _launchUrl(String addr) async {
