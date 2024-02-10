@@ -1,22 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:visualtimer/common/listmenu.dart';
 import 'package:visualtimer/main.dart';
+import 'package:visualtimer/pages/settings/about.dart';
 import 'package:visualtimer/pages/settings/appearance_settings.dart';
-import 'package:visualtimer/pages/settings/licenses.dart';
-
-_launchUrl() async {
-  var url = Uri.parse("https://github.com/sevonj/visualtimer");
-  if (await canLaunchUrl(url)) {
-    await launchUrl(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -26,10 +14,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  Future<PackageInfo> _getPackageInfo() {
-    return PackageInfo.fromPlatform();
-  }
-
   void setVibrate(bool? vibrate) async {
     if (vibrate == null) return;
 
@@ -49,42 +33,11 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: jylsListMenu(
         children: [
-          appInfoItem(),
-          gitHubItem(),
           appearanceItem(),
           vibrateItem(),
-          licensesItem(),
+          aboutItem(),
         ],
       ),
-    );
-  }
-
-  Widget appInfoItem() {
-    return FractionallySizedBox(
-      widthFactor: .75,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 64,
-              child: Image.asset("res/app_icon_transparent.png"),
-            ),
-            const Padding(padding: EdgeInsets.all(8)),
-            buildAppInfo(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget gitHubItem() {
-    return const ListTile(
-      title: Text("View project on GitHub"),
-      subtitle: Text('Bug reports, feature requests, source code'),
-      onTap: _launchUrl,
-      leading: Icon(Icons.code),
     );
   }
 
@@ -123,40 +76,14 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget licensesItem() {
+  Widget aboutItem() {
     return ListTile(
-      title: const Text("Acknowledgements"),
-      subtitle: const Text('Open-source components'),
+      title: const Text("About"),
+      subtitle: const Text('Learn more about this app'),
       onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const LicenseSettings()))
+              MaterialPageRoute(builder: (context) => const AboutPage()))
           .then((_) => setState(() {})),
-      leading: const Icon(Icons.library_books),
-    );
-  }
-
-// Fetches appinfo for appInfoItem
-  FutureBuilder<PackageInfo> buildAppInfo() {
-    return FutureBuilder<PackageInfo>(
-      future: _getPackageInfo(),
-      builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error fetching package info.');
-        } else if (!snapshot.hasData) {
-          return const Text('Fetching package info...');
-        }
-        final data = snapshot.data!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(data.appName, textScaler: const TextScaler.linear(1.5)),
-            Text(
-                kDebugMode
-                    ? 'version: ${data.version}+${data.buildNumber} DEBUG'
-                    : 'version: ${data.version}+${data.buildNumber}',
-                textAlign: TextAlign.left),
-          ],
-        );
-      },
+      leading: const Icon(Icons.info),
     );
   }
 }
