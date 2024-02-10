@@ -31,8 +31,6 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.13.9'
       - run: flutter pub get
       - run: dart run flutter_launcher_icons
 
