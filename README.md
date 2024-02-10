@@ -6,4 +6,20 @@ Available for PC, Android, and as a [webpage](https://sevonj.github.io/visualtim
 
 <img src="https://github.com/sevonj/visualtimer/assets/100710152/3d7aaa1f-9f24-4428-8184-13dc2f3a798c" width="256" /> ![image](https://github.com/sevonj/visualtimer/assets/100710152/46bacc41-51b4-4d77-823d-8bfefbda9a46)
 
-[Backlog](https://github.com/users/sevonj/projects/6)
+## Development
+See [Backlog](https://github.com/users/sevonj/projects/6) for an overview of issues and planned features.
+
+### Requirements
+- Flutter SDK 3.16.x  
+Get it from [Flutter SDK archive](https://docs.flutter.dev/release/archive) and follow [their guide.](https://docs.flutter.dev/get-started/install)
+- Android Studio  
+Install using [JetBrains Toolbox](https://www.jetbrains.com/toolbox-app/) or [do it manually.](https://developer.android.com/studio)
+
+### Dev problems
+
+#### Android build fails:
+See https://github.com/sevonj/visualtimer/issues/90
+
+#### Device selector is gone or missing entries:
+![Screenshot from 2024-02-10 13-42-15](https://github.com/sevonj/visualtimer/assets/100710152/fe7deccc-cb1e-4f7e-875b-29bfda1b2ced)  
+Close project, delete the `.idea` directory, and reopen.
