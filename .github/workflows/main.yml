@@ -17,7 +17,7 @@ jobs:
       - name: List files
         run: ls -R build/linux/x64
       - name: Create artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: visualtimer_linux
           path: build/linux/x64/release/bundle/
@@ -63,12 +63,12 @@ jobs:
       - name: List files
         run: ls -R build/app/outputs/flutter-apk ; ls -R build/app/outputs/bundle
       - name: Create Bundle artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: visualtimer_bundle
           path: build/app/outputs/bundle/release/app-release.aab
       - name: Create APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: visualtimer_apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -85,7 +85,7 @@ jobs:
       - name: List files
         run: ls -R build/web
       - name: Create artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: visualtimer_web
           path: build/web/
@@ -101,7 +101,7 @@ jobs:
       - name: List files
         run: ls -R build/windows
       - name: Create artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: visualtimer_windows
           path: build\windows\x64\runner\Release
